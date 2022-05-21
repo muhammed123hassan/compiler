@@ -1,0 +1,400 @@
+1- Program → Program ClassDeclaration End.
+2- ClassDeclaration→ Category ID{ Class_Implementation} | Category  ID Derive { Class_Implementation}
+3- Class_Implementation→ VarDeclaration Class_Implementation| MethodDeclaration Class_Implementation | Comment Class_Implementation | using_command Class_Implementation| Func  _Call Class_Implementation |empty
+4- MethodDeclaration→ Func Decl ;| Func Decl { VarDeclaration Statements }
+5- Func Decl → Type ID (ParameterList)
+6- Type → Ilap | Silap | Clop | Series | Ilapf | Silapf | None | Logical
+7- ParameterList → empty | None | Non-Empty List
+8- Non-Empty List→ Type ID | Non-Empty List , Type ID
+
+=========================================================
+9. VarDeclaration→ empty | Type ID_List ; VarDeclaration
+10. ID_List →ID | ID_List , ID
+11. Statements→empty | Statement Statements
+12. Statement→Assignment | If _Statement | Rotatewhen _Statement |Continuewhen_Statement | Replywith _ Statement | terminatethis _Statement|read (ID ); | write (Expression); |empty
+13. Assignment→ VarDeclaration = Expression;
+14. Func _Call → ID (Argument_List) ;
+15. Argument_List →empty | NonEmpty_Argument_List
+16. NonEmpty_Argument_List →Expression | NonEmpty_Argument_List , Expression
+17. Block Statements→{ statements }
+==========================================================
+18. If _Statement→ If (Condition _Expression) Block Statements
+19. Condition _Expression→ Condition |Condition Condition _Op 
+Condition
+20. Condition _Op → and | or 
+21. Condition→ Expression Comparison _Op Expression 
+22. Comparison _Op → == | != | > | >= | < | <=
+23. Rotate _Statement → Rotatewhen(Condition _Expression) Block 
+Statements
+24. Continuewhen _Statement →Continuewhen ( expression ; expression ;expression ) Block Statements
+25. Replywith _Statement→ Replywith Expression ; | returnID ;
+26. terminatethis _Statement→ terminatethis;
+27. Expression → Term |Expression Add_Op Term
+28. Add_Op → + | -
+29. Term→Factor| Term Mul_Op Factor 
+30. Mul_Op→* | /
+31. Factor→ ID| Number
+32. Comment → <* STR *> | -- STR
+33. using_command →using(F_name.txt);
+34. F_name →STR
+
+---------------------------------------------------------------------------------------Left recursion - left factor
+1- Program → Program'   //left recursion
+2- Program' → ClassDeclaration End Program'.
+
+3- ClassDeclaration→ Category ID ClassDeclaration'
+4- ClassDeclaration'→ { Class_Implementation} | Derive { Class_Implementation}
+   
+5- Class_Implementation→ VarDeclaration Class_Implementation | MethodDeclaration Class_Implementation | Comment Class_Implementation | using_command Class_Implementation| Func _Call Class_Implementation |empty
+   
+6- MethodDeclaration→ Func Decl MethodDeclaration'
+7- MethodDeclaration'→  ; | { VarDeclaration Statements }
+
+8- Func Decl → Type ID ( ParameterList )
+
+9- Type → Ilap | Silap | Clop | Series | Ilapf | Silapf | None | Logical
+
+10- ParameterList → None | Non-Empty List | empty 
+
+11- Non-Empty List → Type ID Non-Empty List' 
+12- Non-Empty List'→ , Type ID Non-Empty List' | empty 
+   
+13- VarDeclaration → Type ID_List ; VarDeclaration |empty 
+
+14- ID_List → ID ID_List'
+15- ID_List' → , ID ID_List' | empty 
+
+15- Statements →  Statement Statements | empty
+
+16- Statement → Assignment | If _Statement | Rotatewhen _Statement | Continuewhen_Statement | Replywith _ Statement | terminatethis_Statement  | empty  
+   
+17- Assignment → VarDeclaration = Expression ;
+
+18- Func _Call → ID ( Argument_List ) ;
+
+19- Argument_List → NonEmpty_Argument_List | empty 
+
+20- NonEmpty_Argument_List →Expression NonEmpty_Argument_List'
+21- NonEmpty_Argument_List' → , Expression NonEmpty_Argument_List' | empty 
+
+22- Block Statements → { Statements } 
+
+23- If _Statement → If ( Condition_Expression ) Block Statements
+
+24- Condition_Expression → Condition Condition_Expression'
+25- Condition_Expression' → Condition _Op Condition |empty
+
+26- Condition _Op → and | or 
+
+27- Condition → Expression Comparison _Op Expression 
+
+28- Comparison _Op → == | != | > | >= | < | <=
+
+29- Rotatewhen _Statement → Rotatewhen ( Condition _Expression ) Block Statements
+
+30- Continuewhen_Statement → Continuewhen ( Expression ; Expression ; Expression ) Block Statements
+
+31- Replywith _Statement → Replywith Expression ; | returnID ; 
+
+
+
+32- terminatethis _Statement→ terminatethis ;
+
+33- Expression → Term Expression'
+34- Expression' → Add_Op Term Expression' | empty 
+
+35- Add_Op → + | -
+
+36- Term → Factor Term'
+37- Term' → Mul_Op Factor Term' | empty
+
+38- Mul_Op → * | /
+
+39- Factor → ID| Number
+
+40- Comment → <STR> | --STR
+
+41- using_command → using ( F_name.txt );
+
+42- F_name → STR
+
+///////////////////////////////////////first//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  first(program) ={$} 
+  first(program') = first(ClassDeclaration)=Category
+
+  first(ClassDeclaration)  = Category
+
+  first(ClassDeclaration') = { { ,Derive}
+
+  first(Class_Implementation)=first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)
+
+  ={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,<STR> , --STR,using,ID,empty}
+
+  first(MethodDeclaration) =first(Func Decl)=first(type)= {Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical}
+
+  first(MethodDeclaration')= { ; , { }
+
+  first(Func Decl)=first(Type)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical }
+
+  firat(Type)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical }
+
+  first(ParameterList)=first(Non-Empty List)={empty , None,Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical}
+
+  first(Non-Empty List)=first(type)={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical}
+
+  first(Non-Empty List')=first(type)={ , , empty}
+
+  first(VarDeclaration)=first(type)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical , empty}
+
+  first(ID_List)={ID}
+
+  first(ID_List')={, , empty }
+
+  first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)
+  ={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+
+  first(Assignment)=first(VarDeclaration)-----first(Type)={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,empty}
+
+  first(Func _Call)={ID}
+
+  first(Argument_List)=first(NonEmpty_Argument_List)----first(Expression)----first(term)---first(factor)={ID,NUMBER,empty}
+
+  first(NonEmpty_Argument_List)=first(Expression)---first(term)---first(factor)={ID,NUMBER}
+
+  first(NonEmpty_Argument_List')=first(Expression)---first(term)---first(factor)={ID,NUMBER,empty}
+
+  first( Block Statements)={ {  }
+
+  first(If _Statement)={If}
+
+  first(Condition _Expression)=first(Condition)---first(Expression)-----first(term)---first(factor)={ID,NUMBER}
+
+  first(Condition _Expression')= first(Condition _Op)={and , or,empty}
+
+  first(Condition _Op)={and , or}
+
+  first(Condition)=first(Expression)-----first(term)---first(factor)={ID,NUMBER}
+
+  first(Comparison _Op)= {== , != , > , >= , < , <=}
+  
+  first(Rotate _Statement)={Rotatewhen}
+  
+  first(Continuewhen _Statement)={Continuewhen}
+  
+  first(Replywith _Statement)={Replywith}
+  
+  first(terminatethis _Statement)={terminatethis}
+  
+  first(Expression)=first(term)---first(factor)={ID,NUMBER}
+  
+  first(Expression')=first(Add_Op)={+ , -,empty}
+  
+  first(Term)=first(factor)={ID,NUMBER}
+  
+  first(Term')=first(Mul_Op)={* , /}
+  
+  first(Mul_Op)={* , /}
+  
+  first(Factor)={ID,NUMBER}
+  
+  first(Comment)={<STR> , --STR}
+  
+  first(using_command)={using}
+  
+  first(F_name)={STR}
+//////////////////////////////////////////////////////////////Follow////////////////////////////////////////////////////////
+
+follow(Program)={$}
+
+follow(Program')=follow(program)={$}
+
+follow(ClassDeclaration)={End}
+
+follow(ClassDeclaration')=follow(ClassDeclaration)={End}
+
+follow(Class_Implementation)={ } }
+
+follow(MethodDeclaration)= first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)
+
+
+follow(MethodDeclaration)= first(Class_Implementation) =first(VarDeclaration)=first(type)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical },
+//هنا في فيرست ال تايب لقيت ايمبتي والفولو مفيهاش ايمبتي فا هطلع اجيب فولو الكلاس ,,follow(Class_Implementation)={ } }
+													   =first(MethodDeclaration)=first(Func Decl)=first(type)= {Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical}
+													   =first(Func Decl)=first(type)= {Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical}
+													   =first(Comment)={<STR> , --STR}
+													   =first(using_command)={using}
+													   =first(Func  _Call)={ID}
+follow(MethodDeclaration)= first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)=
+    
+		{Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical,},<STR> , --STR,using,ID}		///خلاص	
+
+
+		
+follow(MethodDeclaration') = follow(MethodDeclaration)=first(Class_Implementation)  =   first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)
+={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,<STR> ,--STR,using,ID,empty}
+
+follow(MethodDeclaration') =  follow(MethodDeclaration)= first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)=
+    {Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical,},<STR> , --STR,using,ID}		///خلاص		
+
+
+ 
+
+follow(Func Decl)=first(MethodDeclaration')={ ; , { }
+
+follow(Type)=first(ID_List)={ID}
+
+follow(ParameterList)={)}
+
+follow(Non-Empty List)=follow(ParameterList)={)}
+
+follow(Non-Empty List')=follow(Non-Empty List)=follow(ParameterList)={)}
+
+follow(VarDeclaration)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+
+  ={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,<STR> ,--STR,using,ID,If,Rotatewhen,Continuewhen,Replywith,terminatethis,=,empty}
+  
+follow(VarDeclaration)=first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call),,,,,
+					  =first(Statements)=first(Statement)=first(Assignment)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+
+    ={Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical,},<STR> , --STR,using,ID,If,Rotatewhen,Continuewhen,Replywith,terminatethis,=}   ///خلاص
+
+
+
+
+
+follow(ID_List)={;}
+
+follow(ID_List')=follow(ID_List)={;}
+
+follow(Statements)={}}
+
+
+
+
+follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)
+  ={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+
+follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,}  } ///خلاص
+
+
+
+
+follow(Assignment)=follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+
+  ={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty }
+
+follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,}  } ///خلاص
+
+
+
+
+follow(Func_Call)=first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)=
+    
+		{Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical,},<STR> , --STR,using,ID}		///خلاص	
+ 
+ 
+ 
+ 
+follow(Argument_List)={)}
+
+follow(NonEmpty_Argument_List)=follow(Argument_List)={)}
+
+follow(NonEmpty_Argument_List')=follow(NonEmpty_Argument_List)=follow(Argument_List)={)}
+
+
+
+
+follow(Block Statements)=follow(If _Statement)+follow(Rotatewhen _Statement)+follow(Continuewhen _Statement)= {Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+
+follow(Block Statements)=follow(If _Statement)+follow(Rotatewhen _Statement) = follow(Statement) + follow(Continuewhen _Statement)
+			={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,} , ( } ///خلاص
+  
+
+
+follow(If _Statement)=follow(Statement)--first(Statements)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+
+follow(If _Statement)=follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis , }  } ///خلاص
+
+
+follow(Condition _Expression)={ ) }
+
+follow(Condition _Expression')=follow(Condition _Expression)={ ) }
+
+follow(Condition _Op)=first(Condition)={ID , NUMBER }
+
+follow(Condition)=follow(Condition _Expression') + first(Condition _Expression') = {and , or,empty , ) }
+
+follow(Condition)=follow(Condition _Expression') + first(Condition _Expression') = {and , or, ) }  ///خلاص
+
+
+
+
+follow(Comparison _Op)=first(Expression)---first(term)---first(factor)={ID,NUMBER}
+  
+follow(Rotatewhen _Statement)=follow(Statement)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+follow(Rotatewhen _Statement)= follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,}  }  ///خلاص
+
+  
+follow(Continuewhen _Statement)=follow(Statement)={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+follow(Continuewhen _Statement)=follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,}  }  ///خلاص
+
+
+  
+follow(Replywith _Statement)=follow(Statement)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+follow(Replywith _Statement)=follow(Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,}  } ///خلاص
+
+
+
+  
+follow(terminatethis _Statement)=follow(Statement)={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,empty}
+follow(terminatethis _Statement)=first(Statements)=first(Statement)----first(Assignment)--first(VarDeclaration)--first(Type)+first(If _Statement)+first(Rotatewhen _Statement)+first(Continuewhen_Statement)+first(Replywith _ Statement)+first(terminatethis  _Statement)+follow(Statements)
+    ==={ Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,If,Rotatewhen,Continuewhen,Replywith,terminatethis,}  } ///خلاص
+
+
+follow(Expression)={;}+first(NonEmpty_Argument_List')+first(Comparison _Op)+follow(Condition)={;,ID,NUMBER,empty,== , != , > , >= , < , <=,)}
+follow(Expression} = first(Comparison _Op) = {== , != , > , >= , < , <=} +  follow(Condition) = =follow(Condition _Expression') + first(Condition _Expression') = {and , or, ) }
+الحل النهائي = {== , != , > , >= , < , <=,and , or , ) , ; , , }     ///خلاص
+
+
+  
+follow(Expression')=follow(Expression)={;,ID,NUMBER,empty,== , != , > , >= , < , <=,)}
+follow(Expression')=follow(Expression} = first(Comparison _Op) = {== , != , > , >= , < , <=} +  follow(Condition)  =follow(Condition _Expression') + first(Condition _Expression') = {and , or, ) }
+ = {== , != , > , >= , < , <=,and , or , ) , ; , , } ///خلاص
+ 
+  
+follow(Term)=first(Expression')={+ , -,empty}
+follow(Term)=first(Expression')={+ , -} + follow (Expression')
+الحل النهائي={== , != , > , >= , < , <=,and , or , ) , ; , , , + , - } ///خلاص
+
+
+  
+follow(Term')=follow(Term)={+ , -,empty}
+follow(Term')=follow(Term)=first(Expression')={+ , -} + follow (Expression')
+= {== , != , > , >= , < , <=,and , or , ) , ; , , , + , - }  ///خلاص
+
+
+
+  
+follow(Mul_Op)=first(Factor)={ID,NUMBER}
+  
+follow(Factor)=first(Term')={* , /}
+  
+  
+  
+follow(Comment)=first(Class_Implementation)={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,<STR> , --STR,using,ID,empty}
+follow(Comment)=first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)=
+    
+		{Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical,},<STR> , --STR,using,ID} ///خلاص
+  
+  
+  
+follow(using_command)=first(Class_Implementation)={Ilap , Silap , Clop , Series , Ilapf , Silapf , None , Logical,<STR> , --STR,using,ID,empty}
+follow(using_command)=first(Class_Implementation) = first(VarDeclaration)+first(MethodDeclaration)---first(Func Decl)+first(Comment)+first(using_command)+first(Func  _Call)=
+    
+		{Ilap,Silap , Clop , Series , Ilapf , Silapf , None , Logical,},<STR> , --STR,using,ID} ///خلاص
+  
+follow(F_name)={.}
